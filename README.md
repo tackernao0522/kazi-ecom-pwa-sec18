@@ -341,3 +341,7 @@ class ContactController extends Controller
 + `各VALUEに Takabo, takaki55730317@gmail.com, this is test message`と入力してみる<br>
 
 + `Send`をクリック<br>
+
+## 300 Consume Contact Rest API From Client Side Part1
+
+`React Project`を編集<br>
