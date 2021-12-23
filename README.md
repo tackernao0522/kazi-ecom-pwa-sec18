@@ -202,3 +202,8 @@ class VisitorController extends Controller
 ```
 
 + `POSTMAN(GET) http://localhost/api/getvisitor`<br>
+
+## 298 Consume Visitor Details API Form Client
+
++ `ReactのProjectを編集`<br>
+
