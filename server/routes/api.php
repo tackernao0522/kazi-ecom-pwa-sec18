@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\VisitorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -8,4 +9,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+// Get Visitor
 Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);

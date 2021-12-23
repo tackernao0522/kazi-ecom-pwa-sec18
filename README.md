@@ -207,3 +207,137 @@ class VisitorController extends Controller
 
 + `ReactのProjectを編集`<br>
 
+## 299 Create Contact Rest API
+
++ `$ php artisan make:model Contact -m`を実行<br>
+
++ `create_contacts_table.php`を編集<br>
+
+```
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateContactsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('contacts', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+            $table->text('message');
+            $table->string('contact_date');
+            $table->string('contact_time');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('contacts');
+    }
+}
+```
+
++ `app/Models/Contact.php`を編集<br>
+
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Contact extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+}
+```
+
++ `$ php artisan migrate`を実行<br>
+
++ `$ php artisan make:controller Admin/ContactController`を実行<br>
+
++ `routes.api.php`を編集<br>
+
+```
+<?php
+
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\VisitorController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// Get Visitor
+Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
+```
+
++ `Admin/ContactController.php`を編集<br>
+
+```
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Contact;
+use Illuminate\Http\Request;
+
+class ContactController extends Controller
+{
+    public function postContactDetails(Request $request)
+    {
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $message = $request->input('message');
+
+        date_default_timezone_set("Asia/Tokyo");
+        $contact_time = date("h:i:sa");
+        $contact_date = date("d-m-Y");
+
+        $result = Contact::insert([
+            'name' => $name,
+            'email' => $email,
+            'message' => $message,
+            'contact_time' => $contact_time,
+            'contact_date' => $contact_date,
+        ]);
+
+        return $result;
+    }
+}
+```
+
++ `POSTMAN(POST) http://localhost/api/postcontact`<br>
+
++ `Bodyタブを選択`<br>
+
++ `x-www-form-uriencoded`を選択<br>
+
++ `各KEYに name, email, messageと入力`<br>
+
++ `各VALUEに Takabo, takaki55730317@gmail.com, this is test message`と入力してみる<br>
+
++ `Send`をクリック<br>
