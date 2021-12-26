@@ -605,3 +605,7 @@ class SiteInfoController extends Controller
     }
 ]
 ```
+
+## 307 Consume Site Info in Client Side Part1
+
++ `React Project`を編集<br>
