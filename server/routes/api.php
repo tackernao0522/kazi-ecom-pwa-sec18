@@ -22,3 +22,5 @@ Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
 Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
 // ProductList Route
 Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
+Route::get('/productlistbycategory/{category}', [ProductListController::class, 'productListByCategory']);
+Route::get('/productlistbysubcategory/{category}/{subcategory}', [ProductListController::class, 'productListBySubCategory']);
