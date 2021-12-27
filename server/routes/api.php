@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ProductListController;
 use App\Http\Controllers\Admin\SiteInfoController;
 use App\Http\Controllers\Admin\VisitorController;
 use Illuminate\Http\Request;
@@ -19,3 +20,5 @@ Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
 Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
 // All Category Route
 Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
+// ProductList Route
+Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
