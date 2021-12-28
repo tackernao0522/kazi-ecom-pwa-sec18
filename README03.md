@@ -603,3 +603,7 @@ class SliderController extends Controller
     }
 ]
 ```
+
+## 329 Consume API For Home Slider
+
++ `React Project`を編集<br>
