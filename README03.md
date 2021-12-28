@@ -370,7 +370,7 @@ class ProductListController extends Controller
     public function productListByRemark(Request $request)
     {
         $remark = $request->remark;
-        $productlist = ProductList::where('remark', $remark)->get();
+        $productlist = ProductList::where('remark', $remark)->limit(8)->get();
 
         return $productlist;
     }
@@ -451,3 +451,155 @@ class ProductListController extends Controller
 ## 321 Consume Product List API Part1
 
 + `React Project`を編集<br>
+
+# Section31: Create and Consume Home Slider Rest API
+
+## 328 Create API For Home Slider
+
++ `php artisan make:model HomeSlider -m`を実行<br>
+
++ `create_home_sliders_table.php`を編集<br>
+
+```
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateHomeSlidersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('home_sliders', function (Blueprint $table) {
+            $table->id();
+            $table->string('slider_image');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('home_sliders');
+    }
+}
+```
+
++ `app/Models/HomeSlider.php`を編集<br>
+
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class HomeSlider extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'slider_image'
+    ];
+}
+```
+
++ `storage/app/public`ディレクトリに`slider1jpg`と`slider2.jpg`と`slider3.jpg`を配置<br>
+
++ `phpMyAdminのhome_slidersテーブルに直接データ入力` http://localhost/storage/slider1.jpg...<br>
+
++ `$ php artisan migrate`を実行<br>
+
++ `$ php artisan make:controller Admin/SliderController`を実行<br>
+
++ `routes/api.php`を編集<br>
+
+```
+<?php
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\SiteInfoController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\VisitorController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// Get Visitor
+Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
+// Site Info Route
+Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
+// All Category Route
+Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
+// ProductList Route
+Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
+Route::get('/productlistbycategory/{category}', [ProductListController::class, 'productListByCategory']);
+Route::get('/productlistbysubcategory/{category}/{subcategory}', [ProductListController::class, 'productListBySubCategory']);
+// Slider Route
+Route::get('/allslider', [SliderController::class, 'allSlider']);
+```
+
++ `app/Http/Controllers/Admin/SliderController.php`を編集<br>
+
+```
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\HomeSlider;
+use Illuminate\Http\Request;
+
+class SliderController extends Controller
+{
+    public function allSlider()
+    {
+        $result = HomeSlider::all();
+
+        return $result;
+    }
+}
+```
+
++ `POSTMAN(GET) http://localhost/api/allslider`<br>
+
+```
+[
+    {
+        "id": 1,
+        "slider_image": "http://localhost/storage/slider1.jpg",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 2,
+        "slider_image": "http://localhost/storage/slider2.jpg",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 3,
+        "slider_image": "http://localhost/storage/slider3.jpg",
+        "created_at": null,
+        "updated_at": null
+    }
+]
+```
