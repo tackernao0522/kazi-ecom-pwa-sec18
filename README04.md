@@ -181,3 +181,7 @@ class ProductDetailController extends Controller
     ]
 }
 ```
+
+## 338 Consume Product Details API Part1
+
++ `React Project`を編集<br>
