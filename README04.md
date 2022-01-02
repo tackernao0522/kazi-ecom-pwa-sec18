@@ -185,3 +185,197 @@ class ProductDetailController extends Controller
 ## 338 Consume Product Details API Part1
 
 + `React Project`を編集<br>
+
+# Section34: Create and Consume Notification Rest API
+
+## 345 Create Notification History API
+
++ `$ php artisan make:model Notification -m`を実行<br>
+
++ `create_notifications_table.php`を編集<br>
+
+```
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateNotificationsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('message');
+            $table->string('date');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('notifications');
+    }
+}
+```
+
++ `app/Models/Notification.php`を編集<br>
+
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Notification extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'message',
+        'date',
+    ];
+}
+```
+
++ `$ php artisan migrate`を実行<br>
+
++ `phpMyAdminのnotificationsテーブル`に直接データ挿入<br>
+
++ `$ php artisan make:controller Admin/NotificationController`を実行<br>
+
++ `routes/api.php`を編集<br>
+
+```
+<?php
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ProductDetailController;
+use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\SiteInfoController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\VisitorController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// Get Visitor
+Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
+// Site Info Route
+Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
+// All Category Route
+Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
+// ProductList Route
+Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
+Route::get('/productlistbycategory/{category}', [ProductListController::class, 'productListByCategory']);
+Route::get('/productlistbysubcategory/{category}/{subcategory}', [ProductListController::class, 'productListBySubCategory']);
+// Slider Route
+Route::get('/allslider', [SliderController::class, 'allSlider']);
+// Product Details Route
+Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDetails']);
+// Notifications Route
+Route::get('/notification', [NotificationController::class, 'notificationHistory']);
+```
+
++ `app/Http/Controllers/Admin/NotificationController.php`を編集<br>
+
+```
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Notification;
+use Illuminate\Http\Request;
+
+class NotificationController extends Controller
+{
+    public function notificationHistory()
+    {
+        $result = Notification::all();
+
+        return $result;
+    }
+}
+```
+
++ `POSTMAN(GET) http://localhost/api/notification`<br>
+
+```
+[
+    {
+        "id": 1,
+        "title": "test 1 Lorem Ipsum is simply dummy text of ",
+        "message": "message 1 Each course has been hand-tailored to teach a specific skill. I hope you agree! Whether you’re trying to learn a new skill from scratch or want to refresh your memory on something you’ve learned in the past, you’ve come to the right place.",
+        "date": "11/05/2021",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 2,
+        "title": "test 2 Lorem Ipsum is simply dummy text of ",
+        "message": "message 2 Each course has been hand-tailored to teach a specific skill. I hope you agree! Whether you’re trying to learn a new skill from scratch or want to refresh your memory on something you’ve learned in the past, you’ve come to the right place.",
+        "date": "12/05/2021",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 3,
+        "title": "test 3 Lorem Ipsum is simply dummy text of ",
+        "message": "message 3 Each course has been hand-tailored to teach a specific skill. I hope you agree! Whether you’re trying to learn a new skill from scratch or want to refresh your memory on something you’ve learned in the past, you’ve come to the right place.",
+        "date": "13/05/2021",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 4,
+        "title": "test 4 Lorem Ipsum is simply dummy text of ",
+        "message": "message 4 Each course has been hand-tailored to teach a specific skill. I hope you agree! Whether you’re trying to learn a new skill from scratch or want to refresh your memory on something you’ve learned in the past, you’ve come to the right place.",
+        "date": "14/05/2021",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 5,
+        "title": "test 5 Lorem Ipsum is simply dummy text of ",
+        "message": "message 5 Each course has been hand-tailored to teach a specific skill. I hope you agree! Whether you’re trying to learn a new skill from scratch or want to refresh your memory on something you’ve learned in the past, you’ve come to the right place.",
+        "date": "15/05/2021",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 6,
+        "title": "test 6 Lorem Ipsum is simply dummy text of ",
+        "message": "message 6 Each course has been hand-tailored to teach a specific skill. I hope you agree! Whether you’re trying to learn a new skill from scratch or want to refresh your memory on something you’ve learned in the past, you’ve come to the right place.",
+        "date": "16/05/2021",
+        "created_at": null,
+        "updated_at": null
+    }
+]
+```
+
+## 346 Consume Notification History API Part1
+
++ `React Project`を編集<br>
