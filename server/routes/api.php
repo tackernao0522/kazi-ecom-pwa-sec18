@@ -33,3 +33,5 @@ Route::get('/allslider', [SliderController::class, 'allSlider']);
 Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDetails']);
 // Notifications Route
 Route::get('/notification', [NotificationController::class, 'notificationHistory']);
+// Search Route
+Route::get('/search/{key}', [ProductListController::class, 'productBySearch']);

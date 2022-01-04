@@ -2,9 +2,9 @@
 
 ## 336 Create Product Details API Part1
 
-+ `$ php artisan make:model ProductDetail -m`を実行<br>
+- `$ php artisan make:model ProductDetail -m`を実行<br>
 
-+ `create/product_details_table.php`を編集<br>
+- `create/product_details_table.php`を編集<br>
 
 ```
 <?php
@@ -49,7 +49,7 @@ class CreateProductDetailsTable extends Migration
 }
 ```
 
-+ `app/Models/ProductDetail.php`を編集<br>
+- `app/Models/ProductDetail.php`を編集<br>
 
 ```
 <?php
@@ -67,15 +67,15 @@ class ProductDetail extends Model
 }
 ```
 
-+ `$ php artisan migrate`を実行<br>
+- `$ php artisan migrate`を実行<br>
 
-+ `$ php artisan make:controller Admin/ProductDetailController`を実行
+- `$ php artisan make:controller Admin/ProductDetailController`を実行
 
-+ `phpMyAdminのproduct_details_tableに直接データ入力`<br>
+- `phpMyAdminのproduct_details_tableに直接データ入力`<br>
 
 ## 337 Create Product Details API Part2
 
-+ `routes/api.php`を編集<br>
+- `routes/api.php`を編集<br>
 
 ```
 <?php
@@ -112,7 +112,7 @@ Route::get('/allslider', [SliderController::class, 'allSlider']);
 Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDetails']);
 ```
 
-+ `app/Http/Controllers/Admin/ProductDetailController.php`を編集<br>
+- `app/Http/Controllers/Admin/ProductDetailController.php`を編集<br>
 
 ```
 <?php
@@ -142,7 +142,7 @@ class ProductDetailController extends Controller
 }
 ```
 
-+ `POSTMAN(GET) http://localhost/api/productdetails/2`<br>
+- `POSTMAN(GET) http://localhost/api/productdetails/2`<br>
 
 ```
 {
@@ -184,15 +184,15 @@ class ProductDetailController extends Controller
 
 ## 338 Consume Product Details API Part1
 
-+ `React Project`を編集<br>
+- `React Project`を編集<br>
 
 # Section34: Create and Consume Notification Rest API
 
 ## 345 Create Notification History API
 
-+ `$ php artisan make:model Notification -m`を実行<br>
+- `$ php artisan make:model Notification -m`を実行<br>
 
-+ `create_notifications_table.php`を編集<br>
+- `create_notifications_table.php`を編集<br>
 
 ```
 <?php
@@ -231,7 +231,7 @@ class CreateNotificationsTable extends Migration
 }
 ```
 
-+ `app/Models/Notification.php`を編集<br>
+- `app/Models/Notification.php`を編集<br>
 
 ```
 <?php
@@ -253,13 +253,13 @@ class Notification extends Model
 }
 ```
 
-+ `$ php artisan migrate`を実行<br>
+- `$ php artisan migrate`を実行<br>
 
-+ `phpMyAdminのnotificationsテーブル`に直接データ挿入<br>
+- `phpMyAdminのnotificationsテーブル`に直接データ挿入<br>
 
-+ `$ php artisan make:controller Admin/NotificationController`を実行<br>
+- `$ php artisan make:controller Admin/NotificationController`を実行<br>
 
-+ `routes/api.php`を編集<br>
+- `routes/api.php`を編集<br>
 
 ```
 <?php
@@ -299,7 +299,7 @@ Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDeta
 Route::get('/notification', [NotificationController::class, 'notificationHistory']);
 ```
 
-+ `app/Http/Controllers/Admin/NotificationController.php`を編集<br>
+- `app/Http/Controllers/Admin/NotificationController.php`を編集<br>
 
 ```
 <?php
@@ -321,7 +321,7 @@ class NotificationController extends Controller
 }
 ```
 
-+ `POSTMAN(GET) http://localhost/api/notification`<br>
+- `POSTMAN(GET) http://localhost/api/notification`<br>
 
 ```
 [
@@ -378,4 +378,153 @@ class NotificationController extends Controller
 
 ## 346 Consume Notification History API Part1
 
-+ `React Project`を編集<br>
+- `React Project`を編集<br>
+
+# Section36: Create and Consume Search Rest API
+
+## 351 Create Search API
+
+- `routes/api.php`を編集<br>
+
+```
+<?php
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ProductDetailController;
+use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\SiteInfoController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\VisitorController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// Get Visitor
+Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
+// Site Info Route
+Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
+// All Category Route
+Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
+// ProductList Route
+Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
+Route::get('/productlistbycategory/{category}', [ProductListController::class, 'productListByCategory']);
+Route::get('/productlistbysubcategory/{category}/{subcategory}', [ProductListController::class, 'productListBySubCategory']);
+// Slider Route
+Route::get('/allslider', [SliderController::class, 'allSlider']);
+// Product Details Route
+Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDetails']);
+// Notifications Route
+Route::get('/notification', [NotificationController::class, 'notificationHistory']);
+// Search Route
+Route::get('/search/{key}', [ProductListController::class, 'productBySearch']);
+```
+
+- `app/Http/Controllers/Admin/ProductListController.php`を編集<br>
+
+```
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\ProductList;
+use Illuminate\Http\Request;
+
+class ProductListController extends Controller
+{
+    public function productListByRemark(Request $request)
+    {
+        $remark = $request->remark;
+        $productlist = ProductList::where('remark', $remark)->limit(8)->get();
+
+        return $productlist;
+    }
+
+    public function productListByCategory(Request $request)
+    {
+        $category = $request->category;
+        $productlist = ProductList::where('category', $category)->get();
+
+        return $productlist;
+    }
+
+    public function productListBySubCategory(Request $request)
+    {
+        $category = $request->category;
+        $subCategory = $request->subcategory;
+        $productlist = ProductList::where('category', $category)
+            ->where('subcategory', $subCategory)
+            ->get();
+
+        return $productlist;
+    }
+
+    public function productBySearch(Request $request)
+    {
+        $key = $request->key;
+        $productlist = ProductList::where('title', 'LIKE', "%{$key}%")
+            ->orWhere('brand', 'LIKE', "%{$key}%")->get();
+
+        return $productlist;
+    }
+}
+```
+
+- `POSTMAN(GET) http://localhost/api/search/asus`<br>
+
+```
+[
+    {
+        "id": 1,
+        "title": "ASUS TUF A15 FA506IU Ryzen",
+        "price": "2000",
+        "special_price": "na",
+        "image": "https://rukminim1.flixcart.com/image/416/416/kn7sdjk0/mobile/q/j/x/c21-rmx3201-realme-original-imagfxfwbszrxkvu.jpeg?q=70",
+        "category": "Mobiles",
+        "subcategory": "Samsung",
+        "remark": "FEATURED",
+        "brand": "Tony",
+        "star": "4",
+        "product_code": "5645656",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 7,
+        "title": "ASUS VivoBook Ultra 14 Core i3 10th Gen",
+        "price": "2300",
+        "special_price": "2000",
+        "image": "https://rukminim1.flixcart.com/image/416/416/kh9gbrk0/computer/a/s/k/asus-na-thin-and-light-laptop-original-imafxbj7gyrpudka.jpeg?q=70",
+        "category": "Computer",
+        "subcategory": "Laptops",
+        "remark": "FEATURED",
+        "brand": "ASUS",
+        "star": "5",
+        "product_code": "45672",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 18,
+        "title": "ASUS TUF A15 FA506IU Ryzen 7 4800H GTX",
+        "price": "1250",
+        "special_price": "1000",
+        "image": "https://rukminim1.flixcart.com/image/416/416/knm2s280/mobile/v/l/u/hot-10-play-x688b-infinix-original-imag29hfaedkgdfe.jpeg?q=70",
+        "category": "Mobiles",
+        "subcategory": "Samsung",
+        "remark": "COLLECTION",
+        "brand": "ASUS",
+        "star": "3",
+        "product_code": "318745",
+        "created_at": null,
+        "updated_at": null
+    }
+]
+```
