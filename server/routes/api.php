@@ -8,12 +8,21 @@ use App\Http\Controllers\Admin\ProductListController;
 use App\Http\Controllers\Admin\SiteInfoController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\VisitorController;
+use App\Http\Controllers\User\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+// --------- User Login API Start -------------
+// Login Routes
+Route::post('/login', [AuthController::class, 'login']);
+// Register Routes
+Route::post('/register', [AuthController::class, 'register']);
+// --------- End User Login API ---------
+
 
 // Get Visitor
 Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
