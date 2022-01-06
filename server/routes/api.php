@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SiteInfoController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\ForgetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 // Register Routes
 Route::post('/register', [AuthController::class, 'register']);
+// Forget Password Routes
+Route::post('/forgetpassword', [ForgetPasswordController::class, 'forgetPassword']);
 // --------- End User Login API ---------
 
 
