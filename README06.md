@@ -376,3 +376,111 @@ class ResetPasswordController extends Controller
     "message": "Password Change Successfully"
 }
 ```
+
+## 364 Create User Login Authentication API Part4
+
++ `$ php artisan make:controller User/UserController`を実行<br>
+
++ `routes/api.php`を編集<br>
+
+```
+<?php
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ProductDetailController;
+use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\SiteInfoController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\VisitorController;
+use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\ForgetPasswordController;
+use App\Http\Controllers\User\ResetPasswordController;
+use App\Http\Controllers\User\UserController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// --------- User Login API Start -------------
+// Login Routes
+Route::post('/login', [AuthController::class, 'login']);
+// Register Routes
+Route::post('/register', [AuthController::class, 'register']);
+// Forget Password Routes
+Route::post('/forgetpassword', [ForgetPasswordController::class, 'forgetPassword']);
+// Reset Password Routes
+Route::post('/resetpassword', [ResetPasswordController::class, 'resetPassword']);
+// Current User Route
+Route::get('/user', [UserController::class, 'user'])->middleware('auth:api'); // 追記
+// --------- End User Login API ---------
+
+
+// Get Visitor
+Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
+// Site Info Route
+Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
+// All Category Route
+Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
+// ProductList Route
+Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
+Route::get('/productlistbycategory/{category}', [ProductListController::class, 'productListByCategory']);
+Route::get('/productlistbysubcategory/{category}/{subcategory}', [ProductListController::class, 'productListBySubCategory']);
+// Slider Route
+Route::get('/allslider', [SliderController::class, 'allSlider']);
+// Product Details Route
+Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDetails']);
+// Notifications Route
+Route::get('/notification', [NotificationController::class, 'notificationHistory']);
+// Search Route
+Route::get('/search/{key}', [ProductListController::class, 'productBySearch']);
+```
+
++ `app/Http/Controllers/User/UserController.php`を編集<br>
+
+```
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class UserController extends Controller
+{
+    public function user()
+    {
+        return Auth::user();
+    }
+}
+```
+
++ `Postman(GET) http://localhost/api/user`を入力<br>
+
++ `HeadersタブのKeyにAuthorizationを追加記入し Valueに Bearer "ここにloginしたtokenをコピペする(""は除く)"` を追加記入する<br>
+
++ `Bodyタブを選択してform-data`を選択する<br>
+
++ `KEYにemailとpasswordを記入`<br>
+
++ `Sendする`<br>
+
+```
+{
+    "id": 2,
+    "name": "naomi",
+    "email": "takaki_5573031@yahoo.co.jp",
+    "email_verified_at": null,
+    "current_team_id": null,
+    "profile_photo_path": null,
+    "created_at": "2022-01-06T04:05:08.000000Z",
+    "updated_at": "2022-01-06T04:05:08.000000Z",
+    "profile_photo_url": "https://ui-avatars.com/api/?name=naomi&color=7F9CF5&background=EBF4FF"
+}
+```
