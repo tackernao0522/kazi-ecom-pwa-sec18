@@ -174,3 +174,205 @@ class ForgetPasswordMail extends Mailable
     "message": "Reset Password Mail send on your email"
 }
 ```
+
+## 363 Create User Login Authentication API Part3
+
+- `$ php artisan make:migration add_password_reset_table --table=password_resets`を実行<br>
+
+- `add_password_reset_table.php`を編集<br>
+
+```
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddPasswordResetTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('password_resets', function (Blueprint $table) {
+            $table->id();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('password_resets', function (Blueprint $table) {
+            $table->dropColumn('id');
+        });
+    }
+}
+```
+
+- `$ php artisan make:controller User/ResetPasswordController`を実行<br>
+
+- `routes/api.php`を編集<br>
+
+```
+<?php
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ProductDetailController;
+use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\SiteInfoController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\VisitorController;
+use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\ForgetPasswordController;
+use App\Http\Controllers\User\ResetPasswordController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// --------- User Login API Start -------------
+// Login Routes
+Route::post('/login', [AuthController::class, 'login']);
+// Register Routes
+Route::post('/register', [AuthController::class, 'register']);
+// Forget Password Routes
+Route::post('/forgetpassword', [ForgetPasswordController::class, 'forgetPassword']);
+// Reset Password Routes
+Route::post('/resetpassword', [ResetPasswordController::class, 'resetPassword']); // 追記
+// --------- End User Login API ---------
+
+
+// Get Visitor
+Route::get('/getvisitor', [VisitorController::class, 'getVisitorDetails']);
+// Contact Page Route
+Route::post('/postcontact', [ContactController::class, 'postContactDetails']);
+// Site Info Route
+Route::get('/allsiteinfo', [SiteInfoController::class, 'allSiteInfo']);
+// All Category Route
+Route::get('/allcategory', [CategoryController::class, 'AllCategory']);
+// ProductList Route
+Route::get('/productlistbyremark/{remark}', [ProductListController::class, 'productListByRemark']);
+Route::get('/productlistbycategory/{category}', [ProductListController::class, 'productListByCategory']);
+Route::get('/productlistbysubcategory/{category}/{subcategory}', [ProductListController::class, 'productListBySubCategory']);
+// Slider Route
+Route::get('/allslider', [SliderController::class, 'allSlider']);
+// Product Details Route
+Route::get('/productdetails/{id}', [ProductDetailController::class, 'productDetails']);
+// Notifications Route
+Route::get('/notification', [NotificationController::class, 'notificationHistory']);
+// Search Route
+Route::get('/search/{key}', [ProductListController::class, 'productBySearch']);
+```
+
+- `$ php artisan make:request ResetPasswordRequest`を実行<br>
+
+```
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class ResetPasswordRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ];
+    }
+}
+```
+
+- `app/Http/Controllers/User/ResetPasswordController.php`を編集<br>
+
+```
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class ResetPasswordController extends Controller
+{
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $email = $request->email;
+        $token = $request->token;
+        $password = Hash::make($request->password);
+
+        $emailcheck = DB::table('password_resets')
+            ->where('email', $email)->first();
+        $pincheck = DB::table('password_resets')
+            ->where('token', $token)->first();
+
+        if (!$emailcheck) {
+            return response([
+                'message' => "Email Not Found",
+            ], 401);
+        }
+        if (!$pincheck) {
+            return response([
+                'message' => "Pin Code Invalid",
+            ], 401);
+        }
+
+        DB::table('users')
+            ->where('email', $email)->update(['password' => $password]);
+        DB::table('password_resets')
+            ->where('email', $email)->delete();
+
+        return response([
+            'message' => 'Password Change Successfully',
+        ], 200);
+    }
+}
+```
+
+- `Postman(POST) http://localhost/api/resetpassword`を入力<br>
+
+- `Bodyタブを選択してform-data`を選択する<br>
+
+- `KEYにtoken email password password_confirmation`を入力<br>
+
+- `各VALUEに入力する`<br>
+
+- `Sendして確認する`<br>
+
+```
+{
+    "message": "Password Change Successfully"
+}
+```
