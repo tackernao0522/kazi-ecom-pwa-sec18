@@ -1,3 +1,123 @@
+# Section38: Laravel Passport Authentication
+
+## 360 Laravel passport Authentication Passport Install
+
++ `$ composer require laravel/passport`を実行<br>
+
++ `$ php artisan migrate`を実行<br>
+
++ `$ php artisan passport:install`を実行<br>
+
++ `server/.envにCLIENT_1とCLIENT_2のシークレットキーを設定する`<br>
+
++ `app/Models/User.php`を編集<br>
+
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
+// use Laravel\Sanctum\HasApiTokens; // コメントアウト
+use Laravel\Passport\HasApiTokens; // 追記
+
+class User extends Authenticatable
+{
+    use HasApiTokens;
+    use HasFactory;
+    use HasProfilePhoto;
+    use Notifiable;
+    use TwoFactorAuthenticatable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'profile_photo_url',
+    ];
+}
+```
+
++ `app/Providers/AuthServiceProvider.php`を編集<br>
+
+```
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport; // 追記
+
+class AuthServiceProvider extends ServiceProvider
+{
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        'App\Models\Model' => 'App\Policies\ModelPolicy', // コメントアウトを解除
+    ];
+
+    /**
+     * Register any authentication / authorization services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->registerPolicies();
+
+        if (!$this->app->routesAreCached()) {
+            Passport::routes();
+        }
+    }
+}
+```
+
++ `config/auth.php`を編集<br>
+
+```
 <?php
 
 return [
@@ -116,3 +236,4 @@ return [
     'password_timeout' => 10800,
 
 ];
+```
