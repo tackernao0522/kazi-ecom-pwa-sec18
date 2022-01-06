@@ -484,3 +484,7 @@ class UserController extends Controller
     "profile_photo_url": "https://ui-avatars.com/api/?name=naomi&color=7F9CF5&background=EBF4FF"
 }
 ```
+
+## 365 Consume User Authentication Login Credentials Part1
+
++ `React Project`を編集<br>
