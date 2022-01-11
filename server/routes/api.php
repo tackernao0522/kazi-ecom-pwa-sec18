@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProductDetailController;
 use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\SiteInfoController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\VisitorController;
@@ -55,3 +56,5 @@ Route::get('/notification', [NotificationController::class, 'notificationHistory
 Route::get('/search/{key}', [ProductListController::class, 'productBySearch']);
 // Similar Product Route
 Route::get('/similar/{subcategory}', [ProductListController::class, 'similarProduct']);
+// Review Product Route
+Route::get('/reviewlist/{id}', [ProductReviewController::class, 'reviewList']);
