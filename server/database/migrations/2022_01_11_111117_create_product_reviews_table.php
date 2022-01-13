@@ -17,7 +17,7 @@ class CreateProductReviewsTable extends Migration
             $table->id();
             $table->bigInteger('product_id');
             $table->string('product_name');
-            $table->string('review_name');
+            $table->string('reviewer_name');
             $table->string('reviewer_photo');
             $table->string('reviewer_rating');
             $table->text('reviewer_comments');
