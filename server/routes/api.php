@@ -61,3 +61,5 @@ Route::get('/similar/{subcategory}', [ProductListController::class, 'similarProd
 Route::get('/reviewlist/{id}', [ProductReviewController::class, 'reviewList']);
 // Product Cart Route
 Route::post('/addtocart', [ProductCartController::class, 'addToCart']);
+// Cart Count Route
+Route::get('/cartcount/{product_code}', [ProductCartController::class, 'cartCount']);
