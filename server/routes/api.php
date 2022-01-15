@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\FavoriteController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProductCartController;
 use App\Http\Controllers\Admin\ProductDetailController;
@@ -63,3 +64,5 @@ Route::get('/reviewlist/{id}', [ProductReviewController::class, 'reviewList']);
 Route::post('/addtocart', [ProductCartController::class, 'addToCart']);
 // Cart Count Route
 Route::get('/cartcount/{product_code}', [ProductCartController::class, 'cartCount']);
+// Favorite Route
+Route::get('/favorite/{product_code}/{email}', [FavoriteController::class, 'addFavorite']);
