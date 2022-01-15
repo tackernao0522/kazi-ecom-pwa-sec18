@@ -1,6 +1,6 @@
 # Section42: Add To Favorite Option Setup
 
-## 392 Add To Favorite Option Setup
+## 392 Add To Favorite Part1
 
 - `$ php artisan make:model Favorite -m`を実行<br>
 
@@ -199,3 +199,7 @@ class FavoriteController extends Controller
   }
 }
 ```
+
+## 393 Add To Favorite Part2
+
+- `React Project`を編集<br>
