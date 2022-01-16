@@ -311,3 +311,7 @@ Route::get('/favoritelist/{email}', [
   'favoriteList',
 ]); // 追記
 ```
+
+## 395 Add To Favorite Part4
+
+- `React Project`を編集<br>
