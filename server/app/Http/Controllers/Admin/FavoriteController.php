@@ -24,4 +24,13 @@ class FavoriteController extends Controller
 
         return $result;
     }
+
+    public function favoriteList(Request $request)
+    {
+        $email = $request->email;
+
+        $result = Favorite::where('email', $email)->get();
+
+        return $result;
+    }
 }
