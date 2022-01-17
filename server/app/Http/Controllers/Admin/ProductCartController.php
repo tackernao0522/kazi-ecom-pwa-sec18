@@ -59,4 +59,12 @@ class ProductCartController extends Controller
 
         return $result;
     }
+
+    public function removeCartList(Request $request)
+    {
+        $id = $request->id;
+        $result = ProductCart::where('id', $id)->delete();
+
+        return $result;
+    }
 }
