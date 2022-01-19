@@ -95,4 +95,9 @@ class ProductCartController extends Controller
 
         return $result;
     }
+
+    public function cartOrder(Request $request)
+    {
+        
+    }
 }
