@@ -144,8 +144,18 @@ class ProductCartController extends Controller
                     $cartInsertDeleteResult = 0;
                 }
             }
-
-            return $cartInsertDeleteResult;
         }
+
+        return $cartInsertDeleteResult;
+    }
+
+    public function orderListByUser(Request $request)
+    {
+        $email = $request->email;
+        $result = CartOrder::where('email', $email)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return $result;
     }
 }

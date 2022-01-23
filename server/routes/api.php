@@ -75,3 +75,4 @@ Route::get('/cartitemplus/{id}/{quantity}/{price}', [ProductCartController::clas
 Route::get('/cartitemminus/{id}/{quantity}/{price}', [ProductCartController::class, 'cartItemMinus']);
 // Cart Order Route
 Route::post('/cartorder', [ProductCartController::class, 'cartOrder']);
+Route::get('/orderlistbyuser/{email}', [ProductCartController::class, 'orderListByUser']);
