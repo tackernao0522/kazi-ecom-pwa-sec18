@@ -412,8 +412,9 @@ class ProductReviewController extends Controller
     return $result;
   }
 
-  public function postReview(Request $request) // 追記
+  public function postReview(Request $request)
   {
+    // 追記
     $product_name = $request->input('product_name');
     $product_code = $request->input('product_code');
     $user_name = $request->input('reviewer_name');
@@ -434,3 +435,7 @@ class ProductReviewController extends Controller
   }
 }
 ```
+
+## 415 Post Product Review Part2
+
+- `React Project`を編集<br>
