@@ -1,6 +1,6 @@
 ## 425 Customize Login Form
 
-```html:resources/views/auth/login.blade.php`を編集<br>
+`html:resources/views/auth/login.blade.php`を編集<br>
 
 ```html:login.blade.php
 <!DOCTYPE html>
