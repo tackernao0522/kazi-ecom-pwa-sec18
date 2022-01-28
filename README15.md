@@ -1094,7 +1094,7 @@ class AdminController extends Controller
               <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
                   <img
-                    src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}"
+                    src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images/' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}"
                     alt="Admin"
                     class="rounded-circle p-1 bg-primary"
                     width="110"
