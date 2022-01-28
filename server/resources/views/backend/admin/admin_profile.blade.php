@@ -26,7 +26,7 @@
             <div class="card">
               <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                  <img src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                  <img src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images/' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                   <div class="mt-3">
                     <h4>{{ $adminData->name }}</h4>
                     <p class="text-secondary mb-1">{{ $adminData->email }}</p>
@@ -94,7 +94,7 @@
                     <input class="form-control" type="file" name="profile_photo_path" id="image">
                   </div>
                   <div class="mb-3">
-                    <img id="showImage" src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}" style="width: 100px; height: 100px">
+                    <img id="showImage" src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images/' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}" style="width: 100px; height: 100px">
                   </div>
                   <div class="row">
                     <div class="col-sm-3"></div>
