@@ -27,4 +27,6 @@ Route::get('/logout', [AdminController::class, 'adminLogout'])->name('admin.logo
 
 Route::prefix('admin')->group(function () {
     Route::get('/user/profile', [AdminController::class, 'userProfile'])->name('user.profile');
+
+    Route::post('/user/profile/store', [AdminController::class, 'userProfileStore'])->name('user.profile.store');
 });
