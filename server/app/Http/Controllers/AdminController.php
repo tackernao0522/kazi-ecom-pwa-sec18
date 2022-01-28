@@ -21,4 +21,9 @@ class AdminController extends Controller
 
         return view('backend.admin.admin_profile', compact('adminData'));
     }
+
+    public function userProfileStore(Request $request)
+    {
+        
+    }
 }
