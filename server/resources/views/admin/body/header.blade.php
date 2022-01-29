@@ -324,7 +324,7 @@
       <div class="user-box dropdown">
         <a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           @php
-            $adminData = App\Models\User::find(1)
+          $adminData = App\Models\User::find(1)
           @endphp
           <img src="{{ !empty($adminData->profile_photo_path) ? url('upload/admin_images/' . $adminData->profile_photo_path) : url('upload/no_image.jpg') }}" class="user-img" alt="user avatar">
           <div class="user-info ps-3">
@@ -335,7 +335,7 @@
         <ul class="dropdown-menu dropdown-menu-end">
           <li><a class="dropdown-item" href="{{ route('user.profile') }}"><i class="bx bx-user"></i><span>Profile</span></a>
           </li>
-          <li><a class="dropdown-item" href="javascript:;"><i class="bx bx-cog"></i><span>Settings</span></a>
+          <li><a class="dropdown-item" href="{{ route('change.password') }}"><i class="bx bx-cog"></i><span>Change Password</span></a>
           </li>
           <li><a class="dropdown-item" href="javascript:;"><i class='bx bx-home-circle'></i><span>Dashboard</span></a>
           </li>
