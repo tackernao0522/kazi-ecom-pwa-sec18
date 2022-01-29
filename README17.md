@@ -668,7 +668,6 @@ class AdminController extends Controller
         <div class="row">
           <div class="col-lg-12">
             <form method="post" action="{{ route('change.password.update') }}">
-              @csrf
               <div class="card">
                 <div class="card-body">
                   <div class="row mb-3">
@@ -678,8 +677,8 @@ class AdminController extends Controller
                     <div class="col-sm-9 text-secondary">
                       <input
                         id="current_password"
-                        type="oldPassword"
-                        name="name"
+                        type="password"
+                        name="oldpassword"
                         class="form-control"
                       />
                     </div>
@@ -694,7 +693,6 @@ class AdminController extends Controller
                         type="password"
                         name="password"
                         class="form-control"
-                        value=""
                       />
                     </div>
                   </div>
@@ -708,7 +706,6 @@ class AdminController extends Controller
                         type="password"
                         name="password_confirmation"
                         class="form-control"
-                        value=""
                       />
                     </div>
                   </div>
@@ -851,4 +848,183 @@ class AdminController extends Controller
   {
   }
 }
+```
+
+## 432 Admin Profile Change Password Part2
+
+- `app/Http/Controllers/AdminController.php`を編集<br>
+
+```php:AdminController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class AdminController extends Controller
+{
+  public function adminLogout()
+  {
+    Auth::logout();
+
+    return redirect()->route('login');
+  }
+
+  public function userProfile()
+  {
+    $adminData = User::find(1);
+
+    return view('backend.admin.admin_profile', compact('adminData'));
+  }
+
+  public function userProfileStore(Request $request)
+  {
+    $data = User::find(1);
+    $data->name = $request->name;
+    $data->email = $request->email;
+
+    if ($request->file('profile_photo_path')) {
+      $file = $request->file('profile_photo_path');
+      @unlink(public_path('upload/admin_images/' . $data->profile_photo_path));
+      $filename = date('YmdHi') . $file->getClientOriginalName();
+      $file->move(public_path('upload/admin_images'), $filename);
+      $data['profile_photo_path'] = $filename;
+    }
+    $data->save();
+
+    $notification = [
+      'message' => 'User Profile Updated Successfully',
+      'alert-type' => 'success',
+    ];
+
+    return redirect()
+      ->route('user.profile')
+      ->with($notification);
+  }
+
+  public function changePassword()
+  {
+    return view('backend.admin.change_password');
+  }
+
+  public function changePasswordUpdate(Request $request)
+  {
+    $validateData = $request->validate([
+      'oldpassword' => 'required',
+      'password' => 'required|confirmed',
+    ]);
+
+    $hashedPassword = User::find(1)->password;
+    if (Hash::check($request->oldpassword, $hashedPassword)) {
+      $user = User::find(1);
+      $user->password = Hash::make($request->password);
+      $user->save();
+      Auth::logout();
+
+      return redirect()->route('admin.logout');
+    } else {
+      return redirect()->back();
+    }
+  }
+}
+```
+
+- `resources/views/backend/admin/change_password.blade.php`を編集<br>
+
+```html:change_password.blade.php
+@extends('admin.admin_master') @section('admin')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class="page-wrapper">
+  <div class="page-content">
+    <!--breadcrumb-->
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+      <div class="breadcrumb-title pe-3">User Change Password</div>
+      <div class="ps-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 p-0">
+            <li class="breadcrumb-item">
+              <a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Change Password
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!--end breadcrumb-->
+    <div class="container">
+      <div class="main-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <form method="post" action="{{ route('change.password.update') }}">
+              @csrf @foreach($errors->all() as $error)
+              <p class="text-danger">{{ $error }}</p>
+              @endforeach
+
+              <div class="card">
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Current Password</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input
+                        id="current_password"
+                        type="password"
+                        name="oldpassword"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">New Password</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Confirm Password</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input
+                        id="password_confirmation"
+                        type="password"
+                        name="password_confirmation"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9 text-secondary">
+                      <input
+                        type="submit"
+                        class="btn btn-primary px-4"
+                        value="Change Password"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
 ```
