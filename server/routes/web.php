@@ -42,4 +42,8 @@ Route::prefix('category')->group(function () {
     Route::get('/add', [CategoryController::class, 'addCategory'])->name('add.category');
 
     Route::post('/store', [CategoryController::class, 'storeCategory'])->name('category.store');
+
+    Route::get('/edit/{id}', [CategoryController::class, 'editCategory'])->name('category.edit');
+
+    Route::post('/update/{id}', [CategoryController::class, 'updateCategory'])->name('category.update');
 });
