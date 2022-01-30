@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class CategoryController extends Controller
 {
@@ -43,6 +44,27 @@ class CategoryController extends Controller
 
     public function storeCategory(Request $request)
     {
-        
+        $request->validate([
+            'category_name' => 'required',
+        ], [
+            'category_name.required' => 'Input Category Name',
+        ]);
+
+        $image = $request->file('category_image');
+        $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalName();
+        Image::make($image)->resize(128, 128)->save('upload/category/' . $name_gen);
+        $save_url = 'http://localhost/upload/category/' . $name_gen;
+
+        Category::insert([
+            'category_name' => $request->category_name,
+            'category_image' => $save_url,
+        ]);
+
+        $notification = array(
+            'message' => 'Category Inserted Successfully',
+            'alert-type' => 'success',
+        );
+
+        return redirect()->route('all.category')->with($notification);
     }
 }
