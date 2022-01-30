@@ -67,4 +67,16 @@ class CategoryController extends Controller
 
         return redirect()->route('all.category')->with($notification);
     }
+
+    public function editCategory($id)
+    {
+        $category = Category::findOrFail($id);
+
+        return view('backend.category.category_edit', compact('category'));
+    }
+
+    public function updateCategory(Request $request, Category $id)
+    {
+        
+    }
 }
