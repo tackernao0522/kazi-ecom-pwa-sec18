@@ -38,4 +38,8 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('category')->group(function () {
     Route::get('/all', [CategoryController::class, 'getAllCategory'])->name('all.category');
+
+    Route::get('/add', [CategoryController::class, 'addCategory'])->name('add.category');
+
+    Route::post('/store', [CategoryController::class, 'storeCategory'])->name('category.store');
 });
