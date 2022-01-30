@@ -75,8 +75,36 @@ class CategoryController extends Controller
         return view('backend.category.category_edit', compact('category'));
     }
 
-    public function updateCategory(Request $request, Category $id)
+    public function updateCategory(Request $request, $id)
     {
-        
+        $category = Category::findOrFail($id);
+
+        if ($request->file('category_image')) {
+            $image = $request->file('category_image');
+            $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalName();
+            Image::make($image)->resize(128, 128)->save('upload/category/' . $name_gen);
+            $save_url = 'http://localhost/upload/category/' . $name_gen;
+
+            $category->category_name = $request->category_name;
+            $category->category_image = $save_url;
+            $category->save();
+
+            $notification = array(
+                'message' => 'Category Update With Image Successfully',
+                'alert-type' => 'success',
+            );
+
+            return redirect()->route('all.category')->with($notification);
+        } else {
+            $category->category_name = $request->category_name;
+            $category->save();
+
+            $notification = array(
+                'message' => 'Category Updated Without Image Successfully',
+                'alert-type' => 'success',
+            );
+
+            return redirect()->route('all.category')->with($notification);
+        }
     }
 }
