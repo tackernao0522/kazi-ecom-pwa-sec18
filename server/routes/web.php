@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,4 +34,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/change/password', [AdminController::class, 'changePassword'])->name('change.password');
 
     Route::post('/change/password/update', [AdminController::class, 'changePasswordUpdate'])->name('change.password.update');
+});
+
+Route::prefix('category')->group(function () {
+    Route::get('/all', [CategoryController::class, 'getAllCategory'])->name('all.category');
 });
