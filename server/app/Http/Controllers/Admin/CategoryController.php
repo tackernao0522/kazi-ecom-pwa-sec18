@@ -134,4 +134,27 @@ class CategoryController extends Controller
 
         return view('backend.subCategory.subCategory_add', compact('categories'));
     }
+
+    public function storeSubCategory(Request $request)
+    {
+        $request->validate([
+            'category_name' => 'required',
+            'subcategory_name' => 'required',
+        ], [
+            'category_name.required' => 'Input Category Name',
+            'subcategory_name.required' => 'Input SubCategory Name',
+        ]);
+
+        Subcategory::insert([
+            'category_name' => $request->category_name,
+            'subcategory_name' => $request->subcategory_name,
+        ]);
+
+        $notification = array(
+            'message' => 'SubCategory Inserted Successfully',
+            'alert-type' => 'success',
+        );
+
+        return redirect()->route('all.subcategory')->with($notification);
+    }
 }

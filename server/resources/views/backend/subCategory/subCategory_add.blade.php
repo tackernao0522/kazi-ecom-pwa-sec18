@@ -23,7 +23,7 @@
       <div class="main-body">
         <div class="row">
           <div class="col-lg-8">
-            <form method="post" action="{{ route('category.store') }}">
+            <form method="post" action="{{ route('subcategory.store') }}">
               @csrf
               <div class="card">
                 <div class="card-body">
@@ -33,11 +33,14 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                       <select class="form-select mb-3" name="category_name" aria-label="Default select example">
-                        <option selected="">Choose Category</option>
+                        <option selected="" disabled="">--Choose Category--</option>
                         @foreach($categories as $category)
                         <option value="{{ $category->category_name }}" {{ old('category_name') == $category->category_name ? 'selected': '' }}>{{ $category->category_name }}</option>
                         @endforeach
                       </select>
+                      @error('category_name')
+                      <span class="text-danger">{{ $message }}</span>
+                      @enderror
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -45,7 +48,7 @@
                       <h6 class="mb-0">SubCategory Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      <input type="text" name="category_name" class="form-control" value="{{ old('subcategory_name') }}">
+                      <input type="text" name="subcategory_name" class="form-control" value="{{ old('subcategory_name') }}">
                       @error('subcategory_name')
                       <span class="text-danger">{{ $message }}</span>
                       @enderror

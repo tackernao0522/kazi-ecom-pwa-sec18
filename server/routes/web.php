@@ -54,4 +54,6 @@ Route::prefix('subcategory')->group(function () {
     Route::get('/all', [CategoryController::class, 'getAllSubCategory'])->name('all.subcategory');
 
     Route::get('/add', [CategoryController::class, 'addSubCategory'])->name('add.subcategory');
+
+    Route::post('/store', [CategoryController::class, 'storeSubCategory'])->name('subcategory.store');
 });
