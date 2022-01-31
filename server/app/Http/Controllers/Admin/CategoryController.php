@@ -120,4 +120,18 @@ class CategoryController extends Controller
 
         return redirect()->back()->with($notification);
     }
+
+    public function getAllSubCategory()
+    {
+        $subCategories = Subcategory::latest()->get();
+
+        return view('backend.subCategory.subCategory_view', compact('subCategories'));
+    }
+
+    public function addSubCategory()
+    {
+        $categories = Category::latest()->get();
+
+        return view('backend.subCategory.subCategory_add', compact('categories'));
+    }
 }

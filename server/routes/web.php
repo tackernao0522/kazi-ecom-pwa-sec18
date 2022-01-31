@@ -49,3 +49,9 @@ Route::prefix('category')->group(function () {
 
     Route::get('/delete/{id}', [CategoryController::class, 'deleteCategory'])->name('category.delete');
 });
+
+Route::prefix('subcategory')->group(function () {
+    Route::get('/all', [CategoryController::class, 'getAllSubCategory'])->name('all.subcategory');
+
+    Route::get('/add', [CategoryController::class, 'addSubCategory'])->name('add.subcategory');
+});
