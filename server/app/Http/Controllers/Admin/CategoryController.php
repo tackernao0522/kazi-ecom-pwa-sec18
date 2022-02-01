@@ -184,10 +184,9 @@ class CategoryController extends Controller
             'subcategory_name.required' => 'Input SubCategory Name',
         ]);
 
-
         $subCategory->category_name = $request->category_name;
         $subCategory->subcategory_name = $request->subcategory_name;
-        $category->save();
+        $subCategory->save();
 
         $notification = array(
             'message' => 'SubCategory Updated Successfully',
