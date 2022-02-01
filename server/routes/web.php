@@ -60,4 +60,6 @@ Route::prefix('subcategory')->group(function () {
     Route::get('/edit/{id}', [CategoryController::class, 'editSubCategory'])->name('subcategory.edit');
 
     Route::post('/update/{id}', [CategoryController::class, 'updateSubCategory'])->name('subcategory.update');
+
+    Route::get('/delete/{id}', [CategoryController::class, 'deleteSubCategory'])->name('subcategory.delete');
 });
