@@ -7,13 +7,13 @@
   <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-      <div class="breadcrumb-title pe-3">Add SubCategory</div>
+      <div class="breadcrumb-title pe-3">Edit SubCategory</div>
       <div class="ps-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb mb-0 p-0">
             <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Add SubCategory</li>
+            <li class="breadcrumb-item active" aria-current="page">Edit SubCategory</li>
           </ol>
         </nav>
       </div>
@@ -23,7 +23,7 @@
       <div class="main-body">
         <div class="row">
           <div class="col-lg-8">
-            <form method="post" action="{{ route('subcategory.store') }}">
+            <form method="post" action="{{ route('subcategory.update', $subCategory->id) }}">
               @csrf
               <div class="card">
                 <div class="card-body">
@@ -32,10 +32,10 @@
                       <h6 class="mb-0">Category Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      <select class="form-select mb-3" name="category_name" aria-label="Default select example">
+                      <select name="category_name" class="form-select mb-3" aria-label="Default select example">
                         <option selected="" disabled="">--Choose Category--</option>
                         @foreach($categories as $category)
-                        <option value="{{ $category->category_name }}" {{ old('category_name') == $category->category_name ? 'selected': '' }}>{{ $category->category_name }}</option>
+                        <option value="{{ $category->category_name }}" {{ old('category_name', $category->category_name) == $subCategory->category_name ? 'selected': '' }}>{{ $category->category_name }}</option>
                         @endforeach
                       </select>
                       @error('category_name')
@@ -48,7 +48,7 @@
                       <h6 class="mb-0">SubCategory Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      <input type="text" name="subcategory_name" class="form-control" value="{{ old('subcategory_name') }}">
+                      <input type="text" name="subcategory_name" class="form-control" value="{{ old('subcategory_name', $subCategory->subcategory_name) }}">
                       @error('subcategory_name')
                       <span class="text-danger">{{ $message }}</span>
                       @enderror
@@ -57,7 +57,7 @@
                   <div class="row">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-9 text-secondary">
-                      <input type="submit" class="btn btn-primary px-4" value="Add SubCategory">
+                      <input type="submit" class="btn btn-primary px-4" value="Update SubCategory">
                     </div>
                   </div>
                 </div>

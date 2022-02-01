@@ -157,4 +157,43 @@ class CategoryController extends Controller
 
         return redirect()->route('all.subcategory')->with($notification);
     }
+
+    public function editSubCategory($id)
+    {
+        $categories = Category::orderBy('category_name', 'ASC')->get();
+        $subCategory = Subcategory::findOrFail($id);
+
+        return view(
+            'backend.subCategory.subCategory_edit',
+            compact(
+                'categories',
+                'subCategory'
+            )
+        );
+    }
+
+    public function updateSubCategory(Request $request, $id)
+    {
+        $subCategory = Subcategory::findOrFail($id);
+
+        $request->validate([
+            'category_name' => 'required',
+            'subcategory_name' => 'required',
+        ], [
+            'category_name.required' => 'Input Category Name',
+            'subcategory_name.required' => 'Input SubCategory Name',
+        ]);
+
+
+        $subCategory->category_name = $request->category_name;
+        $subCategory->subcategory_name = $request->subcategory_name;
+        $category->save();
+
+        $notification = array(
+            'message' => 'SubCategory Updated Successfully',
+            'alert-type' => 'success',
+        );
+
+        return redirect()->route('all.subcategory')->with($notification);
+    }
 }
