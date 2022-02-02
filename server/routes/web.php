@@ -71,4 +71,8 @@ Route::prefix('slider')->group(function () {
     Route::get('/add', [SliderController::class, 'addSlider'])->name('add.slider');
 
     Route::post('/store', [SliderController::class, 'storeSlider'])->name('slider.store');
+
+    Route::get('/edit/{id}', [SliderController::class, 'editSlider'])->name('slider.edit');
+
+    Route::post('/update/{id}', [SliderController::class, 'updateSlider'])->name('slider.update');
 });
