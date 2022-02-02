@@ -203,7 +203,7 @@ class CategoryController extends Controller
 
         $notification = array(
             'message' => 'SubCategory Deleted Successfully',
-            'alert-type' => 'success',
+            'alert-type' => 'error',
         );
 
         return redirect()->back()->with($notification);
