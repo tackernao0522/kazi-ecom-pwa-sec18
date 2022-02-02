@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,4 +63,10 @@ Route::prefix('subcategory')->group(function () {
     Route::post('/update/{id}', [CategoryController::class, 'updateSubCategory'])->name('subcategory.update');
 
     Route::get('/delete/{id}', [CategoryController::class, 'deleteSubCategory'])->name('subcategory.delete');
+});
+
+Route::prefix('slider')->group(function () {
+    Route::get('/all', [SliderController::class, 'getAllSlider'])->name('all.slider');
+
+    Route::get('/add', [SliderController::class, 'addSlider'])->name('add.slider');
 });
