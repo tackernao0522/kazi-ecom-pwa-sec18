@@ -69,4 +69,6 @@ Route::prefix('slider')->group(function () {
     Route::get('/all', [SliderController::class, 'getAllSlider'])->name('all.slider');
 
     Route::get('/add', [SliderController::class, 'addSlider'])->name('add.slider');
+
+    Route::post('/store', [SliderController::class, 'storeSlider'])->name('slider.store');
 });
