@@ -51,6 +51,7 @@
         </div>
       </div>
     </div>
+    {{ $products->links('vendor.pagination.custom') }}
   </div>
 </div>
 @endsection
