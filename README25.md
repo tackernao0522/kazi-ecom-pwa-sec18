@@ -497,3 +497,213 @@ class ProductListController extends Controller
 </div>
 @endsection
 ```
+
+## 451 Create Custom Paginations
+
+- `app/Http/Controllers/Admin/ProductListController.php`を編集<br>
+
+```php:ProductListController.php
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\ProductList;
+use Illuminate\Http\Request;
+
+class ProductListController extends Controller
+{
+  public function productListByRemark(Request $request)
+  {
+    $remark = $request->remark;
+    $productlist = ProductList::where('remark', $remark)
+      ->limit(8)
+      ->get();
+
+    return $productlist;
+  }
+
+  public function productListByCategory(Request $request)
+  {
+    $category = $request->category;
+    $productlist = ProductList::where('category', $category)->get();
+
+    return $productlist;
+  }
+
+  public function productListBySubCategory(Request $request)
+  {
+    $category = $request->category;
+    $subCategory = $request->subcategory;
+    $productlist = ProductList::where('category', $category)
+      ->where('subcategory', $subCategory)
+      ->get();
+
+    return $productlist;
+  }
+
+  public function productBySearch(Request $request)
+  {
+    $key = $request->key;
+    $productlist = ProductList::where('title', 'LIKE', "%{$key}%")
+      ->orWhere('brand', 'LIKE', "%{$key}%")
+      ->get();
+
+    return $productlist;
+  }
+
+  public function similarProduct(Request $request)
+  {
+    $subcategory = $request->subcategory;
+    $productlist = ProductList::where('subcategory', $subcategory)
+      ->orderBy('id', 'desc')
+      ->limit(6)
+      ->get();
+
+    return $productlist;
+  }
+
+  public function getAllProduct()
+  {
+    // 編集
+    $products = ProductList::latest()->paginate(10);
+
+    return view('backend.product.product_all', compact('products'));
+  }
+}
+```
+
+- 参考: https://laravel.com/docs/8.x/pagination#introduction <br>
+
+* `$ php artisan vendor:publish --tag=laravel-pagination`を実行<br>
+
+- `resources/views/vendor/pagination/custom.blade.php`ファイルを作成<br>
+
+```html:custom.blade.php
+@if ($paginator->hasPages())
+<nav aria-label="Page navigation example">
+  <ul class="pagination round-pagination">
+    @if ($paginator->onFirstPage())
+    <li
+      class="page-item disabled"
+      aria-disabled="true"
+      aria-label="@lang('pagination.previous')"
+    >
+      <a class="page-link" href="javascript:;">Previous</a>
+    </li>
+    @else
+    <li class="page-item">
+      <a
+        class="page-link"
+        href="{{ $paginator->previousPageUrl() }}"
+        rel="prev"
+        aria-label="@lang('pagination.previous')"
+      >
+        &lsaquo;
+      </a>
+    </li>
+    @endif @foreach ($elements as $element) {{-- "Three Dots" Separator --}} @if
+    (is_string($element))
+    <li class="disabled" aria-disabled="true"><span>{{ $element }}</span></li>
+    @endif {{-- Array Of Links --}} @if (is_array($element)) @foreach ($element
+    as $page => $url) @if ($page == $paginator->currentPage())
+    <li class="page-item active active" aria-current="page">
+      <a class="page-link" href="javascript:;">{{ $page }}</a>
+    </li>
+    @else
+    <li><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+    @endif @endforeach @endif @endforeach @if ($paginator->hasMorePages())
+    <li class="page-item">
+      <a
+        class="page-link"
+        href="{{ $paginator->nextPageUrl() }}"
+        rel="next"
+        aria-label="@lang('pagination.next')"
+      >
+        Next
+      </a>
+    </li>
+    @else
+    <li
+      class="page-item disabled"
+      aria-disabled="true"
+      aria-label="@lang('pagination.next')"
+    >
+      <a class="page-link" href="javascript:;">Next</a>
+    </li>
+    @endif
+  </ul>
+</nav>
+@endif
+```
+
+- `resources/views/backend/product/product_all.blade.php`を編集<br>
+
+```html:product_all.blade.php
+@extends('admin.admin_master') @section('admin')
+<div class="page-wrapper">
+  <div class="page-content">
+    <div class="card radius-10">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-0">All Product</h5>
+          </div>
+          <div class="font-22 ms-auto">
+            <i class="bx bx-dots-horizontal-rounded"></i>
+          </div>
+        </div>
+        <hr />
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>SL</th>
+                <th>Product Image</th>
+                <th>Product Name</th>
+                <th>Product Code</th>
+                <th>Product Category</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @php($i = 1) @foreach($products as $product)
+              <tr>
+                <td>{{ $i++ }}</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="recent-product-img">
+                      <img src="{{ $product->image }}" alt="" />
+                    </div>
+                  </div>
+                </td>
+                <td>{{ $product->title }}</td>
+                <td>{{ $product->product_code }}</td>
+                <td>{{ $product->category }}</td>
+                <td>
+                  <a
+                    href="{{-- route('category.edit', $category->id) --}}"
+                    class="btn btn-info"
+                  >
+                    Edit
+                  </a>
+                  <a
+                    href="{{-- route('category.delete', $category->id) --}}"
+                    id="delete"
+                    class="btn btn-danger"
+                  >
+                    Delete
+                  </a>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    // 追記 {{ $products->links('vendor.pagination.custom') }}
+  </div>
+</div>
+@endsection
+```
