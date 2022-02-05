@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\ProductDetail;
 use App\Models\ProductList;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
@@ -97,5 +98,44 @@ class ProductListController extends Controller
             'product_code' => $request->product_code,
             'image' => $save_url,
         ]);
+
+        $image1 = $request->file('image_one');
+        $name_gen1 = hexdec(uniqid()) . '.' . $image1->getClientOriginalName();
+        Image::make($image1)->resize(711, 960)->save('upload/product_details/' . $name_gen1);
+        $save_url1 = 'http://localhost/upload/product_details/' . $name_gen1;
+
+        $image2 = $request->file('image_two');
+        $name_gen2 = hexdec(uniqid()) . '.' . $image2->getClientOriginalName();
+        Image::make($image2)->resize(711, 960)->save('upload/product_details/' . $name_gen2);
+        $save_url2 = 'http://localhost/upload/product_details/' . $name_gen2;
+
+        $image3 = $request->file('image_three');
+        $name_gen3 = hexdec(uniqid()) . '.' . $image3->getClientOriginalName();
+        Image::make($image3)->resize(711, 960)->save('upload/product_details/' . $name_gen3);
+        $save_url3 = 'http://localhost/upload/product_details/' . $name_gen3;
+
+        $image4 = $request->file('image_four');
+        $name_gen4 = hexdec(uniqid()) . '.' . $image4->getClientOriginalName();
+        Image::make($image4)->resize(711, 960)->save('upload/product_details/' . $name_gen4);
+        $save_url4 = 'http://localhost/upload/product_details/' . $name_gen4;
+
+        ProductDetail::insert([
+            'product_id' => $product,
+            'image_one' => $save_url1,
+            'image_two' => $save_url2,
+            'image_three' => $save_url3,
+            'image_four' => $save_url4,
+            'short_description' => $request->short_description,
+            'color' => $request->color,
+            'size' => $request->size,
+            'long_description' => $request->long_description,
+        ]);
+
+        $notification = array(
+            'message' => 'Product Inserted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.product')->with($notification);
     }
 }
