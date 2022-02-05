@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\ProductList;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class ProductListController extends Controller
 {
@@ -70,5 +71,31 @@ class ProductListController extends Controller
         $subCategories = Subcategory::orderBy('subcategory_name', 'ASC')->get();
 
         return view('backend.product.product_add', compact('categories', 'subCategories'));
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $request->validate([
+            'product_code' => 'required',
+        ], [
+            'product_code.required' => 'Input Product Code'
+        ]);
+
+        $image = $request->file('image');
+        $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalName();
+        Image::make($image)->resize(711, 960)->save('upload/product/' . $name_gen);
+        $save_url = 'http://localhost/upload/product/' . $name_gen;
+
+        $product = ProductList::insertGetId([
+            'title' => $request->title,
+            'price' => $request->price,
+            'special_price' => $request->special_price,
+            'category' => $request->category,
+            'subcategory' => $request->subcategory,
+            'remark' => $request->remark,
+            'brand' => $request->brand,
+            'product_code' => $request->product_code,
+            'image' => $save_url,
+        ]);
     }
 }

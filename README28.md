@@ -1,3 +1,167 @@
+## 454 Add Store Product Part3
+
+- `routes/web.php`を編集<br>
+
+```php:web.php
+<?php
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductListController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+  return view('welcome');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])
+  ->get('/dashboard', function () {
+    return view('admin.index');
+  })
+  ->name('dashboard');
+
+// Admin Logout Routes
+Route::get('/logout', [AdminController::class, 'adminLogout'])->name(
+  'admin.logout'
+);
+
+Route::prefix('admin')->group(function () {
+  Route::get('/user/profile', [AdminController::class, 'userProfile'])->name(
+    'user.profile'
+  );
+
+  Route::post('/user/profile/store', [
+    AdminController::class,
+    'userProfileStore',
+  ])->name('user.profile.store');
+
+  Route::get('/change/password', [
+    AdminController::class,
+    'changePassword',
+  ])->name('change.password');
+
+  Route::post('/change/password/update', [
+    AdminController::class,
+    'changePasswordUpdate',
+  ])->name('change.password.update');
+});
+
+Route::prefix('category')->group(function () {
+  Route::get('/all', [CategoryController::class, 'getAllCategory'])->name(
+    'all.category'
+  );
+
+  Route::get('/add', [CategoryController::class, 'addCategory'])->name(
+    'add.category'
+  );
+
+  Route::post('/store', [CategoryController::class, 'storeCategory'])->name(
+    'category.store'
+  );
+
+  Route::get('/edit/{id}', [CategoryController::class, 'editCategory'])->name(
+    'category.edit'
+  );
+
+  Route::post('/update/{id}', [
+    CategoryController::class,
+    'updateCategory',
+  ])->name('category.update');
+
+  Route::get('/delete/{id}', [
+    CategoryController::class,
+    'deleteCategory',
+  ])->name('category.delete');
+});
+
+Route::prefix('subcategory')->group(function () {
+  Route::get('/all', [CategoryController::class, 'getAllSubCategory'])->name(
+    'all.subcategory'
+  );
+
+  Route::get('/add', [CategoryController::class, 'addSubCategory'])->name(
+    'add.subcategory'
+  );
+
+  Route::post('/store', [CategoryController::class, 'storeSubCategory'])->name(
+    'subcategory.store'
+  );
+
+  Route::get('/edit/{id}', [
+    CategoryController::class,
+    'editSubCategory',
+  ])->name('subcategory.edit');
+
+  Route::post('/update/{id}', [
+    CategoryController::class,
+    'updateSubCategory',
+  ])->name('subcategory.update');
+
+  Route::get('/delete/{id}', [
+    CategoryController::class,
+    'deleteSubCategory',
+  ])->name('subcategory.delete');
+});
+
+Route::prefix('slider')->group(function () {
+  Route::get('/all', [SliderController::class, 'getAllSlider'])->name(
+    'all.slider'
+  );
+
+  Route::get('/add', [SliderController::class, 'addSlider'])->name(
+    'add.slider'
+  );
+
+  Route::post('/store', [SliderController::class, 'storeSlider'])->name(
+    'slider.store'
+  );
+
+  Route::get('/edit/{id}', [SliderController::class, 'editSlider'])->name(
+    'slider.edit'
+  );
+
+  Route::post('/update/{id}', [SliderController::class, 'updateSlider'])->name(
+    'slider.update'
+  );
+
+  Route::get('/delete/{id}', [SliderController::class, 'deleteSlider'])->name(
+    'slider.delete'
+  );
+});
+
+Route::prefix('product')->group(function () {
+  Route::get('/all', [ProductListController::class, 'getAllProduct'])->name(
+    'all.product'
+  );
+
+  Route::get('/add', [ProductListController::class, 'addProduct'])->name(
+    'add.product'
+  );
+
+  // 追記
+  Route::post('/store', [ProductListController::class, 'storeProduct'])->name(
+    'product.store'
+  );
+});
+```
+
+- `public/upload/product`ディレクトリを作成<br>
+
+* `resources/views/backend/product/product_add.blade.php`を編集<br>
+
+```html:product_add.blade.php
 @extends('admin.admin_master')
 
 @section('admin')
@@ -193,3 +357,122 @@
   });
 </script>
 @endsection
+```
+
+- `app/Http/Controllers/Admin/ProductListController.php`を編集<br>
+
+```php:ProductListController.php
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\ProductList;
+use App\Models\Subcategory;
+use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
+
+class ProductListController extends Controller
+{
+  public function productListByRemark(Request $request)
+  {
+    $remark = $request->remark;
+    $productlist = ProductList::where('remark', $remark)
+      ->limit(8)
+      ->get();
+
+    return $productlist;
+  }
+
+  public function productListByCategory(Request $request)
+  {
+    $category = $request->category;
+    $productlist = ProductList::where('category', $category)->get();
+
+    return $productlist;
+  }
+
+  public function productListBySubCategory(Request $request)
+  {
+    $category = $request->category;
+    $subCategory = $request->subcategory;
+    $productlist = ProductList::where('category', $category)
+      ->where('subcategory', $subCategory)
+      ->get();
+
+    return $productlist;
+  }
+
+  public function productBySearch(Request $request)
+  {
+    $key = $request->key;
+    $productlist = ProductList::where('title', 'LIKE', "%{$key}%")
+      ->orWhere('brand', 'LIKE', "%{$key}%")
+      ->get();
+
+    return $productlist;
+  }
+
+  public function similarProduct(Request $request)
+  {
+    $subcategory = $request->subcategory;
+    $productlist = ProductList::where('subcategory', $subcategory)
+      ->orderBy('id', 'desc')
+      ->limit(6)
+      ->get();
+
+    return $productlist;
+  }
+
+  public function getAllProduct()
+  {
+    $products = ProductList::latest()->paginate(10);
+
+    return view('backend.product.product_all', compact('products'));
+  }
+
+  public function addProduct()
+  {
+    $categories = Category::orderBy('category_name', 'ASC')->get();
+    $subCategories = Subcategory::orderBy('subcategory_name', 'ASC')->get();
+
+    return view(
+      'backend.product.product_add',
+      compact('categories', 'subCategories')
+    );
+  }
+
+  // 追記
+  public function storeProduct(Request $request)
+  {
+    $request->validate(
+      [
+        'product_code' => 'required',
+      ],
+      [
+        'product_code.required' => 'Input Product Code',
+      ]
+    );
+
+    $image = $request->file('image');
+    $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalName();
+    Image::make($image)
+      ->resize(711, 960)
+      ->save('upload/product/' . $name_gen);
+    $save_url = 'http://localhost/upload/product/' . $name_gen;
+
+    $product = ProductList::insertGetId([
+      'title' => $request->title,
+      'price' => $request->price,
+      'special_price' => $request->special_price,
+      'category' => $request->category,
+      'subcategory' => $request->subcategory,
+      'remark' => $request->remark,
+      'brand' => $request->brand,
+      'product_code' => $request->product_code,
+      'image' => $save_url,
+    ]);
+  }
+}
+```
