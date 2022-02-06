@@ -138,4 +138,19 @@ class ProductListController extends Controller
 
         return redirect()->route('all.product')->with($notification);
     }
+
+    public function editProduct($id)
+    {
+        $categories = Category::orderBy('category_name', 'ASC')->get();
+        $subCategories = Subcategory::orderBy('subcategory_name', 'ASC')->get();
+        $product = ProductList::findOrFail($id);
+        $details = ProductDetail::where('product_id', $id)->get();
+
+        return view('backend.product.product_edit', compact(
+            'categories',
+            'subCategories',
+            'product',
+            'details',
+        ));
+    }
 }
