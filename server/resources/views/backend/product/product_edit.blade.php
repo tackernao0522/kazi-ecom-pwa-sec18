@@ -25,7 +25,7 @@
         <h5 class="card-title">Edit Product</h5>
         <hr>
         <div class="form-body mt-4">
-          <form method="post" action="{{ route('product.store') }}" enctype="multipart/form-data">
+          <form method="post" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
               <div class="col-lg-8">
@@ -102,7 +102,7 @@
                       <select class="form-select" name="category" id="inputProductType">
                         <option selected="" disabled="">Select Category</option>
                         @foreach($categories as $category)
-                        <option value="{{ $category->category_name }}" {{ old('category', $category->category_name) == $product->category ? 'selected' : '' }}>{{ $category->category_name }}</option>
+                        <option value="{{ $category->category_name }}" {{ old('category', $product->category) == $category->category_name ? 'selected' : '' }}>{{ $category->category_name }}</option>
                         @endforeach
                       </select>
                       @error('category')
@@ -115,7 +115,7 @@
                       <select class="form-select" name="subcategory" id="inputProductType">
                         <option selected="" disabled="">Select SubCategory</option>
                         @foreach($subCategories as $subCategory)
-                        <option value="{{ $subCategory->subcategory_name }}" {{ old('subcategory', $subCategory->subcategory_name) == $product->subcategory ? 'selected' : '' }}>{{ $subCategory->subcategory_name }}</option>
+                        <option value="{{ $subCategory->subcategory_name }}" {{ old('subcategory', $product->subcategory) == $subCategory->subcategory_name ? 'selected' : '' }}>{{ $subCategory->subcategory_name }}</option>
                         @endforeach
                       </select>
                       @error('subcategory')
@@ -132,6 +132,9 @@
                         <option value="OPPO">OPPO</option>
                         <option value="Samsung">Samsung</option>
                       </select>
+                      @error('brand')
+                      <span class="text-danger">{{ $message }}</span>
+                      @enderror
                     </div>
 
                     @foreach($details as $detail)
