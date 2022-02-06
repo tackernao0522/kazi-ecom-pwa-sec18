@@ -88,4 +88,6 @@ Route::prefix('product')->group(function () {
     Route::post('/store', [ProductListController::class, 'storeProduct'])->name('product.store');
 
     Route::get('/edit/{id}', [ProductListController::class, 'editProduct'])->name('product.edit');
+
+    Route::post('/update/{id}', [ProductListController::class, 'updateProduct'])->name('product.update');
 });
