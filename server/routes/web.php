@@ -102,3 +102,5 @@ Route::get('/message/delete/{id}', [ContactController::class, 'deleteMessage'])-
 Route::get('/all/reviews', [ProductReviewController::class, 'getAllReviews'])->name('all.reviews');
 
 Route::get('/getsite/info', [SiteInfoController::class, 'getSiteInfo'])->name('getsite.info');
+
+Route::post('/update/siteinfo/{id}', [SiteInfoController::class, 'updateSiteInfo'])->name('update.siteinfo');
