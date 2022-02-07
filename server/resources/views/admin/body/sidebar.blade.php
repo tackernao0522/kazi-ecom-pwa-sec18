@@ -78,6 +78,13 @@
         <div class="menu-title">Contact Message</div>
       </a>
     </li>
+    <li>
+      <a href="{{ route('all.reviews') }}">
+        <div class="parent-icon"><i class="bx bx-donate-blood"></i>
+        </div>
+        <div class="menu-title">Product Review</div>
+      </a>
+    </li>
     <li class="menu-label">Forms & Tables</li>
     <li>
       <a class="has-arrow" href="javascript:;">
