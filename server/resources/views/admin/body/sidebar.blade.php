@@ -85,6 +85,18 @@
         <div class="menu-title">Product Review</div>
       </a>
     </li>
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-donate-blood'></i>
+        </div>
+        <div class="menu-title">Site Info</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('getsite.info') }}"><i class="bx bx-right-arrow-alt"></i>Get Site Info</a>
+        </li>
+      </ul>
+
     <li class="menu-label">Forms & Tables</li>
     <li>
       <a class="has-arrow" href="javascript:;">
