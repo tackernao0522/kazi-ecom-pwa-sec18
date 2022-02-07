@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProductListController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\AdminController;
@@ -91,3 +92,5 @@ Route::prefix('product')->group(function () {
 
     Route::post('/update/{id}', [ProductListController::class, 'updateProduct'])->name('product.update');
 });
+
+Route::get('/all/message', [ContactController::class, 'getAllMessage'])->name('contact.message');
