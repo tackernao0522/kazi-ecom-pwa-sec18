@@ -71,6 +71,13 @@
         </li>
       </ul>
     </li>
+    <li>
+      <a href="{{ route('contact.message') }}">
+        <div class="parent-icon"><i class="bx bx-donate-blood"></i>
+        </div>
+        <div class="menu-title">Contact Message</div>
+      </a>
+    </li>
     <li class="menu-label">Forms & Tables</li>
     <li>
       <a class="has-arrow" href="javascript:;">
