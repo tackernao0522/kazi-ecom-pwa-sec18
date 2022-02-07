@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProductListController;
 use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\Admin\SiteInfoController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
@@ -99,3 +100,5 @@ Route::get('/all/message', [ContactController::class, 'getAllMessage'])->name('c
 Route::get('/message/delete/{id}', [ContactController::class, 'deleteMessage'])->name('message.delete');
 
 Route::get('/all/reviews', [ProductReviewController::class, 'getAllReviews'])->name('all.reviews');
+
+Route::get('/getsite/info', [SiteInfoController::class, 'getSiteInfo'])->name('getsite.info');

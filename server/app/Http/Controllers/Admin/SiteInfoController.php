@@ -14,4 +14,11 @@ class SiteInfoController extends Controller
 
         return $result;
     }
+
+    public function getSiteInfo()
+    {
+        $siteinfo = SiteInfo::find(1);
+
+        return view('backend.site_info.siteinfo_update', compact('siteinfo'));
+    }
 }
