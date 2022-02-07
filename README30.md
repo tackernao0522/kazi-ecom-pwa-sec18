@@ -1,5 +1,7 @@
 # セクション 54: Backend Store Contact Data Setup
 
+## 458 Get Contact Data Part1
+
 - `resources/views/admin/body/sidebar.blade.php`を編集<br>
 
 ```html:sidebar.blade.php
