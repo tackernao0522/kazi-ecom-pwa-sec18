@@ -23,7 +23,7 @@
       <div class="main-body">
         <div class="row">
           <div class="col-lg-12">
-            <form method="post" action="{{ route('change.password.update') }}">
+            <form method="post" action="{{ route('update.siteinfo', $siteinfo->id) }}">
               @csrf
               <div class="card">
                 <div class="card-body">
