@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ProductCartController;
 use App\Http\Controllers\Admin\ProductListController;
 use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\SiteInfoController;
@@ -104,3 +105,7 @@ Route::get('/all/reviews', [ProductReviewController::class, 'getAllReviews'])->n
 Route::get('/getsite/info', [SiteInfoController::class, 'getSiteInfo'])->name('getsite.info');
 
 Route::post('/update/siteinfo/{id}', [SiteInfoController::class, 'updateSiteInfo'])->name('update.siteinfo');
+
+Route::prefix('order')->group(function () {
+    Route::get('/pending', [ProductCartController::class, 'pendingOrder'])->name('pending.order');
+});
