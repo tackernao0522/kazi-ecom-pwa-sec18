@@ -39,7 +39,7 @@
                 <td>{{ $order->order_date }}</td>
                 <td><strong><span class="text-danger">{{ $order->order_status }}</span></strong></td>
                 <td>
-                  <a href="{{-- route('subcategory.edit', $subCategory->id) --}}" class="btn btn-info">Details</a>
+                  <a href="{{ route('order.details', $order->id) }}" class="btn btn-info">Details</a>
                 </td>
               </tr>
               @endforeach
