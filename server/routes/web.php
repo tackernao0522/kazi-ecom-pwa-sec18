@@ -112,4 +112,6 @@ Route::prefix('order')->group(function () {
     Route::get('/processing', [ProductCartController::class, 'processingOrder'])->name('processing.order');
 
     Route::get('/complete', [ProductCartController::class, 'completeOrder'])->name('complete.order');
+
+    Route::get('/details/{id}', [ProductCartController::class, 'orderDetails'])->name('order.details');
 });
