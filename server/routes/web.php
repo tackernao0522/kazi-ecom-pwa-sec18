@@ -108,4 +108,8 @@ Route::post('/update/siteinfo/{id}', [SiteInfoController::class, 'updateSiteInfo
 
 Route::prefix('order')->group(function () {
     Route::get('/pending', [ProductCartController::class, 'pendingOrder'])->name('pending.order');
+
+    Route::get('/processing', [ProductCartController::class, 'processingOrder'])->name('processing.order');
+
+    Route::get('/complete', [ProductCartController::class, 'completeOrder'])->name('complete.order');
 });
